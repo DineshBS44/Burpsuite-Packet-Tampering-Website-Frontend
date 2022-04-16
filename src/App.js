@@ -1,24 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import React from "react";
+import axios from "axios";
+import "fomantic-ui/dist/semantic.css";
+import { Container, Card, Icon, Image } from "semantic-ui-react";
+import ShoeCard from "./components/ShoeCard";
+import { CardDeck } from "reactstrap";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import DisplayShoes from "./components/DisplayShoes";
+import Checkout from "./components/Checkout";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<DisplayShoes />} exact />
+        <Route path="/checkout/:id" element={<Checkout />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
