@@ -8,31 +8,33 @@ export default function ShoeCard(props) {
   let navigate = useNavigate();
   function handleClick() {
     console.log(`Button ${props.id} is clicked`);
-    axios.get("http://localhost:5000/getPrice/?id=" + props.id).then((data) => {
-      console.log(data);
-    });
     navigate("/checkout/" + props.id);
   }
   return (
-    <Card>
+    <Card style={{ marginBottom: "30px" }}>
       <Image
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW4Wam9IQiZjp_FYkZrrd99kUqESCo0RZDzg&usqp=CAU"
+        src={props.image}
         wrapped
         ui={false}
-        style={{ width: "auto", height: "auto" }}
+        style={{
+          width: "200px",
+          height: "130px",
+          maxWidth: "100%",
+          maxHeight: "100%",
+          objectFit: "cover",
+          margin: "auto",
+          display: "block",
+          verticalAlign: "middle",
+          horizontalAlign: "middle",
+          backgroundColor: "white",
+        }}
       />
       <Card.Content>
         <Card.Header>{props.name}</Card.Header>
         <Card.Meta>
-          <span className="date">{props.price}</span>
+          <span className="date">{props.description}</span>
         </Card.Meta>
-        <Card.Description>{props.description}</Card.Description>
-      </Card.Content>
-      <Card.Content extra>
-        <a>
-          <Icon name="user" />
-          22 Friends
-        </a>
+        <Card.Description>Price: {props.price}</Card.Description>
       </Card.Content>
       <button class="ui primary button" onClick={handleClick}>
         Buy

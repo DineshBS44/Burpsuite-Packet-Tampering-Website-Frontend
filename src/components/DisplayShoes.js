@@ -2,7 +2,7 @@ import "../App.css";
 import React from "react";
 import axios from "axios";
 import "fomantic-ui/dist/semantic.css";
-import { Container, Card, Icon, Image } from "semantic-ui-react";
+import { Header, Container, Card, Icon, Image } from "semantic-ui-react";
 import ShoeCard from "./ShoeCard";
 import { CardDeck } from "reactstrap";
 
@@ -37,7 +37,12 @@ class DisplayShoes extends React.Component {
   render() {
     return (
       <div className="App">
-        <h1>Shoes</h1>
+        <br />
+        <Header as="h2" icon textAlign="center">
+          <Icon name="warehouse" circular />
+          <Header.Content>Shoes</Header.Content>
+        </Header>
+        <br />
         <Container>
           <CardDeck
             style={{
@@ -54,6 +59,7 @@ class DisplayShoes extends React.Component {
                   key={index}
                   name={shoe.name}
                   price={shoe.price}
+                  image={shoe.image}
                   description={shoe.description}
                   id={shoe.id}
                   style={{ flex: 3 }}
