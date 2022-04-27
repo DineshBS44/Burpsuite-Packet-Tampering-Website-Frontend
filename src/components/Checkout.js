@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import "fomantic-ui/dist/semantic.css";
 import { Container, Card, Icon, Image, Header } from "semantic-ui-react";
 import ShoeCard from "./ShoeCard";
+import aes256 from "aes256";
 
 export default function Checkout() {
   let { id } = useParams();
@@ -13,6 +14,9 @@ export default function Checkout() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
+  const [secretKey, setSecretKey] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
   useEffect(() => {
     if (!shoe) {
       getShoe();
@@ -20,11 +24,38 @@ export default function Checkout() {
   }, []);
   const getShoe = async () => {
     const res = await axios.get(`http://localhost:5000/getShoe/?id=${id}`);
-    setShoe(res.data.shoe);
-    setPrice(res.data.shoe.price);
-    setName(res.data.shoe.name);
-    setDescription(res.data.shoe.description);
-    setImage(res.data.shoe.image);
+    var shoe;
+    const key = localStorage.getItem("secretKey");
+    if (key) {
+      console.log("Key: ", key);
+      console.log(res);
+      setSecretKey(key);
+      try {
+        shoe = JSON.parse(aes256.decrypt(key, res.data.shoe));
+        console.log("shoe", shoe);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    if (shoe && shoe.name && shoe.price && shoe.description && shoe.image) {
+      setShoe(shoe);
+      setPrice(shoe.price);
+      setName(shoe.name);
+      setDescription(shoe.description);
+      setImage(shoe.image);
+      setErrorMsg("");
+    } else {
+      setShoe("Invalid shoe");
+      setPrice("Invalid price");
+      setName("Invalid name");
+      setDescription("Invalid description");
+      setImage(
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_V6OX4MERP_89NpOUEgb_4lGl171D8cZOyQ&usqp=CAU"
+      );
+      setErrorMsg(
+        "The values have been tampered or the key exchange did not take place"
+      );
+    }
   };
   return (
     <div
@@ -47,6 +78,8 @@ export default function Checkout() {
       <h3>Your Order details are </h3>
       <br />
       <h3>Checkout id: {id}</h3>
+      <br />
+      <h3>{errorMsg}</h3>
       <Card
         style={{
           display: "flex",
@@ -63,7 +96,7 @@ export default function Checkout() {
           ui={false}
           style={{
             width: "250px",
-            height: "180px",
+            height: "250px",
             marginTop: "30px",
             objectFit: "cover",
             margin: "auto",
